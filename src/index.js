@@ -18,6 +18,8 @@ app.use('/login', loginRoute);
 
 app.use((req, res) => res.status(404).json({ message: 'not found' }));
 
+app.use((err, req, res, _next) => res.status(err.status).json({ message: err.message }));
+
 app.listen(PORT, () => {
   console.log('Online');
 });
