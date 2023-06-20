@@ -55,13 +55,27 @@ const verifyTalkerId = async (req, res, next) => {
   next();
 };
 
-const searchTalkerQuery = async (req, res, next) => {
+const searchTalkerQ = async (req, res, next) => {
   const { q } = req.query;
   const talkers = await fsReader(PATH_TALKER);
   if (!q) {
     req.talkers = talkers;
   } else {
     req.talkers = talkers.filter((tal) => tal.name.includes(q));
+  }
+  next();
+};
+
+const searchTalkerRate = async (req, res, next) => {
+  const { rate } = req.query;
+  if (rate) {
+    const numRate = Number(rate);
+    if (numRate < 1 || !Number.isInteger(numRate) || numRate > 5) {
+      return next({
+        status: 400, message: 'O campo "rate" deve ser um número inteiro entre 1 e 5',
+      });
+    }
+    req.talkers = req.talkers.filter(({ talk }) => talk.rate === Number(rate));
   }
   next();
 };
@@ -83,5 +97,6 @@ module.exports = {
   watchedAtValidator,
   rateValidator,
   verifyTalkerId,
-  searchTalkerQuery,
+  searchTalkerQ,
+  searchTalkerRate,
 };

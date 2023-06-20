@@ -1,8 +1,8 @@
 const express = require('express');
 const { fsReader, fsWrite } = require('../utils/fsUtils');
 const {
-  tokenValidator, mandatoryValidator, nameValidator, searchTalkerQuery,
-  ageValidator, watchedAtValidator, rateValidator, verifyTalkerId,
+  tokenValidator, mandatoryValidator, nameValidator, searchTalkerQ,
+  ageValidator, watchedAtValidator, rateValidator, verifyTalkerId, searchTalkerRate,
 } = require('../middlewares/talkerValidation');
 
 const route = express.Router();
@@ -25,7 +25,7 @@ route.post('/',
     return res.status(201).json(newTalker);
 });
 
-route.get('/search/', tokenValidator, searchTalkerQuery, async (req, res) => {
+route.get('/search/', tokenValidator, searchTalkerQ, searchTalkerRate, async (req, res) => {
   res.status(200).json(req.talkers);
 });
 
