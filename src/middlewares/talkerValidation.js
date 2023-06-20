@@ -1,3 +1,5 @@
+const { fsReader } = require('../utils/fsUtils');
+
 const tokenValidator = ({ headers: { authorization } }, res, next) => {
   if (!authorization) return next({ status: 401, message: 'Token não encontrado' });
   if (authorization.length !== 16) return next({ status: 401, message: 'Token inválido' });
@@ -41,6 +43,18 @@ const rateValidator = ({ body: { talk: { rate } } }, res, next) => {
   next();
 };
 
+const PATH_TALKER = './src/talker.json';
+const verifyTalkerId = async (req, res, next) => {
+  const { id: idParams } = req.params;
+  const talkers = await fsReader(PATH_TALKER);
+  const updatedTalkers = talkers.filter(({ id }) => id !== Number(idParams));
+  if (talkers.length === updatedTalkers.length) {
+    return next({ status: 404, message: 'Pessoa palestrante não encontrada' });
+  }
+  req.updatedTalkers = updatedTalkers;
+  next();
+};
+
 const mandatoryValidator = (req, res, next) => {
   const mandatories = ['name', 'age', 'talk', 'watchedAt', 'rate'];
   const talker = Object.keys(req.body);
@@ -57,4 +71,5 @@ module.exports = {
   ageValidator,
   watchedAtValidator,
   rateValidator,
+  verifyTalkerId,
 };

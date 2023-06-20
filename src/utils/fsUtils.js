@@ -6,10 +6,7 @@ const fsReader = async (path) => {
   return convertTalkers;
 };
 
-const fsWrite = async (talker, path) => {
-  const talkers = await fsReader(path);
-  await fs.writeFile(path, JSON.stringify([...talkers, talker]));
-};
+const fsWrite = async (newFile, path) => { await fs.writeFile(path, JSON.stringify(newFile)); };
 
 module.exports = {
   fsReader,
