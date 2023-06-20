@@ -15,11 +15,14 @@ route.get('/', async (req, res) => {
 });
 
 route.post('/',
-  mandatoryValidator, nameValidator, ageValidator,
-  watchedAtValidator, rateValidator, tokenValidator,
+  tokenValidator, mandatoryValidator, nameValidator, ageValidator,
+  watchedAtValidator, rateValidator,
   async (req, res) => {
-    await fsWrite(req.body, PATH_TALKER);
-    return res.status(201).json(req.body);
+    const talkers = await fsReader(PATH_TALKER);
+    const { id: lastId } = talkers[talkers.length - 1];
+    const newTalker = { ...req.body, id: lastId + 1 };
+    await fsWrite(newTalker, PATH_TALKER);
+    return res.status(201).json(newTalker);
 });
 
 route.get('/:id', async (req, res) => {
