@@ -44,4 +44,10 @@ route.put('/:id',
     return res.status(200).json(updatedTalker);
 });
 
+route.delete('/:id', tokenValidator, verifyTalkerId, async (req, res) => {
+    const { updatedTalkers } = req;
+    await fsWrite([...updatedTalkers], PATH_TALKER);
+    return res.status(204).json({});
+});
+
 module.exports = route;
