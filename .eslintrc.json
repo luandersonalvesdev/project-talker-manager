@@ -7,6 +7,7 @@
     "sonarjs/no-duplicate-string": [
       "error",
       5
-    ]
+    ],
+    "no-trailing-spaces": "error"
   }
 }
