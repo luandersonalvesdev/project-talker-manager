@@ -1,5 +1,7 @@
 const { fsReader } = require('../utils/fsUtils');
 
+const PATH_TALKER = './src/talker.json';
+
 const tokenValidator = ({ headers: { authorization } }, res, next) => {
   if (!authorization) return next({ status: 401, message: 'Token não encontrado' });
   if (authorization.length !== 16) return next({ status: 401, message: 'Token inválido' });
@@ -43,7 +45,35 @@ const rateValidator = ({ body: { talk: { rate } } }, res, next) => {
   next();
 };
 
-const PATH_TALKER = './src/talker.json';
+const rateVerify = (req, res, next) => {
+  const { rate } = req.body;
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'rate')) {
+    return next({
+      status: 400, message: 'O campo "rate" é obrigatório',
+    });
+  }
+  if (rate < 1 || !Number.isInteger(rate) || rate > 5) {
+    return next({
+      status: 400, message: 'O campo "rate" deve ser um número inteiro entre 1 e 5',
+    });
+  }
+  next();
+};
+
+const ratePatchValidator = async (req, res, next) => {
+  const { rate } = req.body;
+  const id = Number(req.params.id);
+  const talkers = await fsReader(PATH_TALKER);
+  const updatedTalkers = talkers.map((tal) => {
+    if (tal.id === id) {
+      return { ...tal, talk: { ...tal.talk, rate } };
+    }
+    return tal;
+  });
+  req.talkers = updatedTalkers;
+  next();
+};
+
 const verifyTalkerId = async (req, res, next) => {
   const { id: idParams } = req.params;
   const talkers = await fsReader(PATH_TALKER);
@@ -113,4 +143,6 @@ module.exports = {
   searchTalkerQ,
   searchTalkerRate,
   searchTalkerDate,
+  ratePatchValidator,
+  rateVerify,
 };

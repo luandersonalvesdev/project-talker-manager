@@ -3,6 +3,7 @@ const { fsReader, fsWrite } = require('../utils/fsUtils');
 const {
   tokenValidator, mandatoryValidator, nameValidator, searchTalkerQ, searchTalkerDate,
   ageValidator, watchedAtValidator, rateValidator, verifyTalkerId, searchTalkerRate,
+  ratePatchValidator, rateVerify,
 } = require('../middlewares/talkerValidation');
 
 const route = express.Router();
@@ -29,6 +30,13 @@ route.get('/search/',
   tokenValidator, searchTalkerQ,
   searchTalkerRate, searchTalkerDate, async (req, res) => {
   res.status(200).json(req.talkers);
+});
+
+route.patch('/rate/:id',
+  tokenValidator, rateVerify, ratePatchValidator,
+  async (req, res) => {
+    await fsWrite(req.talkers, PATH_TALKER);
+    return res.status(204).json(req.talkers);
 });
 
 route.get('/:id', async (req, res) => {
