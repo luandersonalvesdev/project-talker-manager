@@ -55,6 +55,17 @@ const verifyTalkerId = async (req, res, next) => {
   next();
 };
 
+const searchTalkerQuery = async (req, res, next) => {
+  const { q } = req.query;
+  const talkers = await fsReader(PATH_TALKER);
+  if (!q) {
+    req.talkers = talkers;
+  } else {
+    req.talkers = talkers.filter((tal) => tal.name.includes(q));
+  }
+  next();
+};
+
 const mandatoryValidator = (req, res, next) => {
   const mandatories = ['name', 'age', 'talk', 'watchedAt', 'rate'];
   const talker = Object.keys(req.body);
@@ -72,4 +83,5 @@ module.exports = {
   watchedAtValidator,
   rateValidator,
   verifyTalkerId,
+  searchTalkerQuery,
 };
