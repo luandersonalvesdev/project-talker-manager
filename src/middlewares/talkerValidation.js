@@ -80,6 +80,19 @@ const searchTalkerRate = async (req, res, next) => {
   next();
 };
 
+const searchTalkerDate = async (req, res, next) => {
+  const { date } = req.query;
+  if (date) {
+    if (date.length !== 10 || !date.includes('/')) {
+      return next({
+        status: 400, message: 'O parâmetro "date" deve ter o formato "dd/mm/aaaa"',
+      });
+    }
+    req.talkers = req.talkers.filter(({ talk }) => talk.watchedAt === date);
+  }
+  next();
+};
+
 const mandatoryValidator = (req, res, next) => {
   const mandatories = ['name', 'age', 'talk', 'watchedAt', 'rate'];
   const talker = Object.keys(req.body);
@@ -99,4 +112,5 @@ module.exports = {
   verifyTalkerId,
   searchTalkerQ,
   searchTalkerRate,
+  searchTalkerDate,
 };
