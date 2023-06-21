@@ -5,6 +5,7 @@ const {
   ageValidator, watchedAtValidator, rateValidator, verifyTalkerId, searchTalkerRate,
   ratePatchValidator, rateVerify,
 } = require('../middlewares/talkerValidation');
+const allTalkers = require('../db/talkerDB');
 
 const route = express.Router();
 
@@ -13,6 +14,20 @@ const PATH_TALKER = './src/talker.json';
 route.get('/', async (req, res) => {
   const talkers = await fsReader(PATH_TALKER);
   res.status(200).json(talkers);
+});
+
+route.get('/db/', async (req, res) => {
+  const talkers = await allTalkers();
+  const talkersFormated = talkers.map((tal) => {
+    const formated = {
+      ...tal,
+      talk: { watchedAt: tal.talk_watched_at, rate: tal.talk_rate },
+    };
+    delete formated.talk_watched_at;
+    delete formated.talk_rate;
+    return formated;
+  });
+  res.status(200).json(talkersFormated);
 });
 
 route.post('/',
