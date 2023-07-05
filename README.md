@@ -11,11 +11,11 @@ Consists of building a CRUD API RESTfull with Express and with normalized databa
   ```
   git@github.com:luandersonalvesdev/shooes-store.git
   ```
-  2. #### Change to folder and install dependencies: 
+  3. #### Change to folder and install dependencies: 
   ```
   cd talker-manager && npm i
   ```
-  3. #### Climb the containers with: 
+  4. #### Climb the containers with: 
   ```
   docker-compose up -d
   ```
