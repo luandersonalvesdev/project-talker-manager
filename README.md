@@ -38,11 +38,12 @@ Consists of building a CRUD API RESTfull with Express and with normalized databa
 
 ## 🛠️ Technologies:
   1. Node
-  2. Eslint
-  3. Docker
-  4. Docker Compose
-  5. MySQL
-  6. JavaScript
+  2. Express
+  3. Eslint
+  4. Docker
+  5. Docker Compose
+  6. MySQL
+  7. JavaScript
 <br>
 
 ---
